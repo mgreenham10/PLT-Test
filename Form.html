@@ -1187,6 +1187,7 @@
       }
 
       function getFormData() {
+        const params = new URLSearchParams(window.location.search);
         const venueId = params.get('venueId');
         const round = params.get('round');
 
