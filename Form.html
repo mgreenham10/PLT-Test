@@ -1185,9 +1185,34 @@
           navDestUrl(roundNum);
         });
       }
+
+      function getFormData() {
+        const venueId = params.get('venueId');
+        const round = params.get('round');
+
+        const url = new URL('https://script.google.com/macros/s/AKfycbzSKsXsSkuCtLr3kC8OxIcFqdQdakD7Ux1_-07K7KSMYjt0DDCSyj2qX2h3OG1o4OU9/exec');
+
+        // Add parameters
+        url.searchParams.append('venueId', venueId);
+        url.searchParams.append('venueId', round);
+
+        fetch(url, {
+          method: 'POST',
+          mode: 'no-cors', 
+          body: JSON.stringify({ action: 'doSomething', value: 123 })
+        })
+        .then(response => {
+          console.log("Request sent!");
+        })
+        .catch(error => console.error('Error:', error));
+      }
       
       // LOAD INITIAL GAME STATE
       window.addEventListener('load', () => {
+
+        getFormData();
+        
+
         const regTime = parseInt(localStorage.getItem(vKeyVenue(keyRegistrationTime)), 10);
         console.log("Reg Time: " + regTime);
 
