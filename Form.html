@@ -837,6 +837,43 @@
   </div>
 
   <script>
+
+    // This is your "Global Data Variable"
+    let appData = {};
+
+    getFormData();      
+
+    function renderPage() {
+      // Now you reference it like a normal JavaScript object
+      document.querySelector('.header-logo').src = appData.headerSrc;
+      document.getElementById('venueNameDisplay').innerText = appData.venueName;
+    }
+
+    function getFormData() {
+      const params = new URLSearchParams(window.location.search);
+      const venueId = params.get('venueId');
+      const round = params.get('round');
+
+      // 1. Build the URL with query parameters
+      //const url = new URL('https://script.google.com/macros/s/AKfycbzSKsXsSkuCtLr3kC8OxIcFqdQdakD7Ux1_-07K7KSMYjt0DDCSyj2qX2h3OG1o4OU9/exec');
+      const url = new URL('https://script.google.com/macros/s/AKfycbzsd1aNTtMfhLyiKNvQ2qYNOWfal7psS-KFFP6r3W0/dev');
+      url.searchParams.append('venueId', venueId);
+      url.searchParams.append('round', round);
+
+      // 2. Use 'cors' mode so you can read the response
+      fetch(url, {
+        method: 'GET',
+        mode: 'cors' 
+      })
+      .then(response => response.json()) // Now you can parse the JSON
+      .then(data => {
+        appData = data;
+        console.log("Data received from Apps Script:", data);
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+
     // Search Filtering Logic
     function filterVenues() {
       var input = document.getElementById('searchBox').value.toUpperCase();
@@ -1186,32 +1223,9 @@
         });
       }
 
-      function getFormData() {
-        const params = new URLSearchParams(window.location.search);
-        const venueId = params.get('venueId');
-        const round = params.get('round');
-
-        //const url = new URL('https://script.google.com/macros/s/AKfycbzSKsXsSkuCtLr3kC8OxIcFqdQdakD7Ux1_-07K7KSMYjt0DDCSyj2qX2h3OG1o4OU9/exec');
-        const url = new URL('https://script.google.com/macros/s/AKfycbzsd1aNTtMfhLyiKNvQ2qYNOWfal7psS-KFFP6r3W0/dev');
-
-        fetch(url, {
-          method: 'GET',
-          mode: 'no-cors', 
-          body: JSON.stringify({ venueId: venueId, round: round })
-        })
-        .then(response => {
-          console.log("Request sent!");
-          console.log(response);
-        })
-        .catch(error => console.error('Error:', error));
-      }
-      
       // LOAD INITIAL GAME STATE
       window.addEventListener('load', () => {
-
-        getFormData();
-        
-
+   
         const regTime = parseInt(localStorage.getItem(vKeyVenue(keyRegistrationTime)), 10);
         console.log("Reg Time: " + regTime);
 
